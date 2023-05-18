@@ -9,7 +9,7 @@
 #' @details Function communicates with the user in Slovak to distinguish what dialogs
 #'   represent intended functionality. Pay attention to dialog boxes (2) at the beginning 
 #'   and prompts on the R console afterwards. 
-#' @value Called for side effects. Stores summary of the model fit in a text file and
+#' @returns Called for side effects. Stores summary of the model fit in a text file and
 #'   plots predicted values in pdf files.
 
 parasiteModel <- function(farebna.paleta = "Accent"){
