@@ -15,15 +15,15 @@
 #'    and all failed experiments are returned in a file "neuspesneExperimenty.txt" in the
 #'    working directory.
 #' @note TO DO: incorporate attempt to correct the results, i.e. if speed is negative,
-#'    the animal likely ran twice on one measurement.
+#'    the animal likely ran twice in one measurement.
 #' @return Invisibly returns data.frame with animal ID, animal temperature during 
 #'    measurement, maximum speed between consecutive sensors in meters per second,
 #'    day, month, year of the measurement and the air humidity and temperature of the 
 #'    racetrack.  
 #' @export
 
-calculateSpeed <- function(inputFolder, outputFile = "runSpeeds.txt", ...){
-	subory = dir(inputFolder, recursive = TRUE, full.names = TRUE, ...)
+calculateSpeed <- function(inputFolder, outputFile = "runSpeeds.txt"){
+	subory = dir(inputFolder, recursive = TRUE, full.names = TRUE)
 	
 	# extract date from log file header
 	datum = as.numeric(unlist(strsplit(unlist(strsplit(readLines(subory[1], n = 1), " "))[4], "\\.")))
@@ -33,14 +33,15 @@ calculateSpeed <- function(inputFolder, outputFile = "runSpeeds.txt", ...){
 	
 	rychlost = 100 / suppressWarnings(apply(dat[,2:12], 1, FUN = \(x) min(diff(x), na.rm = T)))
 	
-	res = data.frame(ID = dat$idAnimal, 
+	res = data.frame(id.animal = dat$idAnimal, 
 					 temp = dat$tempAnimal,
 					 speed = rychlost,
 					 day = datum[3],
 					 month = datum[2],
 					 year = datum[1],
 					 humidity = dat$humid,
-					 air.temp = dat$temp)
+					 air.temp = dat$temp,
+					 id.experiment = dat$id)
 	neuspesne = data.frame(matrix(NA, ncol = ncol(res), nrow = 1, 
 								  dimnames = list(NULL, colnames(res))))
 	if(sum(rychlost <= 0) > 0){
@@ -57,14 +58,15 @@ calculateSpeed <- function(inputFolder, outputFile = "runSpeeds.txt", ...){
 	
 		rychlost = 100 / apply(dat[,2:12], 1, FUN = \(x) min(diff(x), na.rm = T))
 		
-		res2 = data.frame(ID = dat$idAnimal, 
+		res2 = data.frame(id.animal = dat$idAnimal, 
 					 temp = dat$tempAnimal,
 					 speed = rychlost,
 					 day = datum[3],
 					 month = datum[2],
 					 year = datum[1],
 					 humidity = dat$humid,
-					 air.temp = dat$temp)
+					 air.temp = dat$temp,
+					 id.experiment = dat$id)
 		if(sum(rychlost <= 0) > 0){
 			neuspesne = rbind(neuspesne, res2[rychlost == 0, ])
 			res2 = res2[rychlost > 0, ]

@@ -4,7 +4,7 @@
 \alias{calculateSpeed}
 \title{Estimates running speed from Arduino Lizards log}
 \usage{
-calculateSpeed(inputFolder, outputFile = "runSpeeds.txt", ...)
+calculateSpeed(inputFolder, outputFile = "runSpeeds.txt")
 }
 \arguments{
 \item{inputFolder}{character path to a folder with running log files.}
@@ -34,5 +34,5 @@ working directory.
 }
 \note{
 TO DO: incorporate attempt to correct the results, i.e. if speed is negative,
-the animal likely ran twice on one measurement.
+the animal likely ran twice in one measurement.
 }
