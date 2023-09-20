@@ -19,10 +19,46 @@
 #' @return Invisibly returns data.frame with animal ID, animal temperature during 
 #'    measurement, maximum speed between consecutive sensors in meters per second,
 #'    day, month, year of the measurement and the air humidity and temperature of the 
-#'    racetrack.  
+#'    racetrack. 
+#'
+#'    Recommended way to use the calculated speeds is to read the saved file. Otherwise, 
+#'    check structure of the returned data carefully prior to downstream analyses.
 #' @export
+#' @examples
+#'   \dontrun{
+#'   # To run the function in an interactive mode, open the R console and type
+#'   calculateSpeed()
+#'   # Hit Enter and follow the instructions in dialog boxes
+#'   }
 
-calculateSpeed <- function(inputFolder, outputFile = "runSpeeds.txt"){
+
+calculateSpeed <- function(inputFolder = NULL, outputFile = NULL){
+    if(is.null(inputFolder) | is.null(outputFile)){
+      for(i in c("utils", "tcltk", "vioplot", "MASS")){
+        if(!require(i, character.only = TRUE)){
+          install.packages(i, dependencies = TRUE)
+          library(i, character.only = TRUE)
+        }
+      }
+    }
+     
+    if(is.null(inputFolder)){  
+      choose_directory = function(caption = 'Vyber adresar, kde su vsetky opravene log subory z behatka') {
+        if (exists('utils::choose.dir')) {
+          choose.dir(caption = caption) 
+        } else {
+          tcltk::tk_choose.dir(caption = caption)
+        }
+      }
+      inputFolder = choose_directory()
+    }
+    
+    if(is.null(outputFile)){
+      message("Vyber adresar a vytvor meno suboru, kam sa ulozia vysledne rychlosti z merani")
+      outputFile = file.choose(new = TRUE)
+    }
+
+
 	subory = dir(inputFolder, recursive = TRUE, full.names = TRUE)
 	
 	# extract date from log file header

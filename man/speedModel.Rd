@@ -4,11 +4,14 @@
 \alias{speedModel}
 \title{Calculates mixed regression model from continuous data}
 \usage{
-speedModel(farebna.paleta = "Accent")
+speedModel(farebna.paleta = "Accent", vymaz.odlahle = TRUE)
 }
 \arguments{
 \item{farebna.paleta}{character. Color palette in \code{hcl.pals()} or
 \code{palette.pals()}.}
+
+\item{vymaz.odlahle}{logical, indicating whether to remove outliers in the dependent
+variable using Tukey's fences.}
 }
 \value{
 Called for side effects. Stores summary of the model fit in a text file and
@@ -25,4 +28,25 @@ fits the model and plots variable predictions as specified by the user.
 Function communicates with the user in Slovak to distinguish what dialogs
 represent intended functionality. Pay attention to dialog boxes (3) at the beginning
 and prompts on the R console afterwards.
+
+Dialogs:
+\enumerate{
+\item Select a folder where the results will be saved
+\item Select a tab-delimited table with data from multiple measurements per animal
+per day. This is likely the result from the \code{caclulateSpeed()} function.
+\item Select a tab-delimited table with data describing the animals. This was likely
+provided by the supervisor.
+}
+
+Once the data tables are selected, the function asks to select variables that would
+be used to construct the model. The predicted values from the model can be plotted,
+displaying one partial fit at the time. All results can be found in the folder
+selected in dialog 1.
+}
+\examples{
+\dontrun{
+# Open R console and type
+speedModel()
+# Hit Enter and follow instructions in dialogs and on the console
+}
 }

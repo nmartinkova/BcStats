@@ -7,15 +7,35 @@
 #' fits the model and plots variable predictions as specified by the user.
 #' @param farebna.paleta character. Color palette in \code{hcl.pals()} or 
 #'   \code{palette.pals()}.
+#' @param vymaz.odlahle logical, indicating whether to remove outliers in the dependent
+#'   variable using Tukey's fences.
 #' @details Function communicates with the user in Slovak to distinguish what dialogs
 #'   represent intended functionality. Pay attention to dialog boxes (3) at the beginning 
 #'   and prompts on the R console afterwards. 
+#' 
+#'   Dialogs:
+#'   1. Select a folder where the results will be saved
+#'   2. Select a tab-delimited table with data from multiple measurements per animal
+#'      per day. This is likely the result from the \code{caclulateSpeed()} function.
+#'   3. Select a tab-delimited table with data describing the animals. This was likely
+#'      provided by the supervisor.
+#'
+#'   Once the data tables are selected, the function asks to select variables that would
+#'   be used to construct the model. The predicted values from the model can be plotted,
+#'   displaying one partial fit at the time. All results can be found in the folder 
+#'   selected in dialog 1.
 #' @returns Called for side effects. Stores summary of the model fit in a text file and
 #'   plots predicted values in pdf files.
 #' @export
+#' @examples
+#' \dontrun{
+#' # Open R console and type
+#' speedModel()
+#' # Hit Enter and follow instructions in dialogs and on the console
+#' }
 
 
-speedModel <- function(farebna.paleta = "Accent"){
+speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE){
 
 for(i in c("utils", "tcltk", "vioplot", "MASS")){
   if(!require(i, character.only = TRUE)){
@@ -70,7 +90,6 @@ beh$date = as.Date(paste(beh$year, beh$month, beh$day, sep="-"))
 
 
 
-
 message("Vyber tabulku s udajmi Lagilis - musi byt tab-delimited format")
 
 dat = read.table(file.choose(), header = TRUE, sep = "\t", stringsAsFactors = FALSE)
@@ -79,8 +98,6 @@ dat$date = as.Date(paste(dat$year, dat$month, dat$day, sep="-"))
 dat$season = as.numeric(format(dat$date, "%j"))   # dni od zaciatku roka
 
 dat[] = lapply(dat, FUN = function(x) if(is.character(x)) as.factor(x) else {x})
-
-
 
 dat$season = as.numeric(format(as.Date(paste(dat$year, dat$month, dat$day, sep="-")), "%j")) 
 
@@ -109,8 +126,21 @@ while(suhlas == "a"){
 
 dat2 = droplevels(dat[complete.cases(dat[,c(stlpce, zavisla, "id.animal")]),])
 
+# odstranint outliery 
+if(vymaz.odlahle){
+	k = 1.5
+	lims = c(quantile(dat2[, zavisla], .25) - k * IQR(dat2[, zavisla]), 
+	         quantile(dat2[, zavisla], .75) + k * IQR(dat2[, zavisla]))
+
+	dat2 = dat2[dat2[, zavisla] <= lims[2] & dat2[, zavisla] >= lims[1], ]
+}
+
+# finalne data 
+
 message("Datova sada pre analyzu ma ", nrow(dat2), " riadkov. Pocitam regresny model.")
 
+
+# model
 fit = lme(as.formula(paste(zavisla, paste(stlpce, collapse = "+"), sep = "~")), 
   random = ~ 1|id.animal, data = dat2)
 
@@ -129,22 +159,24 @@ while(suhlas == "a"){
   
   pred = predict(fit, type = "response", se.fit = TRUE)
 
-  pdf(paste0("Vysledky/", stlpce[ktore], ".pdf"), width= 8, height = 4.5)
-  par(mar = c(4.1,4.1,.5,.5))
+  pdf(paste0("Vysledky/", stlpce[ktore], ".pdf"), width = ifelse(is.factor(dat2[,stlpce[ktore]]), 8, 5.5), height = 4.5)
+  par(mar = c(4.1, 4.1, .5, .5))
   popisok = switch(stlpce[ktore], temperature = expression("Temperature ("^"o" * "C)"),
        sex = "Sex",
        humidity = "Humidity (%)",
-       air.temp = expression("Air temperature ("^"o" * "C)"))
+       air.temp = expression("Air temperature ("^"o" * "C)"),
+       season = "Calendar date",
+       weight = "Weight (g)")
   popisok.y = switch(zavisla, speed = "Predicted running speed (m/s)")
   if(is.factor(dat2[,stlpce[ktore]])){   
-  layout(matrix(c(1,1,2), ncol=3))
-  par(mar = c(4.1,4.1,.5,.5))
-    vioplot(pred ~ dat2[,stlpce[ktore]], col = farby, wex = .6, las =1, xlab = popisok, ylab = popisok.y)
-    box()
-    axis(1, at = 1:nlevels(dat2[,stlpce[ktore]]), labels = levels(dat2[,stlpce[ktore]]))
-    axis(2, las = 1)
-  plot.new()
-  legend("topleft", legend = levels(as.factor(dat2[,stlpce[ktore]])), fill = farby[1:nlevels(as.factor(dat2[,stlpce[ktore]]))])
+    layout(matrix(c(1,1,2), ncol = 3))
+    par(mar = c(4.1,4.1,.5,.5))
+      vioplot(pred ~ dat2[, stlpce[ktore]], col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y)
+      box()
+      axis(1, at = 1:nlevels(dat2[, stlpce[ktore]]), labels = levels(dat2[, stlpce[ktore]]))
+      axis(2, las = 1)
+    plot.new()
+    legend("topleft", legend = levels(as.factor(dat2[, stlpce[ktore]])), fill = farby[1:nlevels(as.factor(dat2[, stlpce[ktore]]))])
   } else {
 	nakresli_lmm(model = fit, dat = dat2, zavisla = zavisla, nezavisla = stlpce[ktore],
 		xlab = popisok, ylab = popisok.y)	
