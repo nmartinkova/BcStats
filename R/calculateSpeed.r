@@ -70,7 +70,7 @@ calculateSpeed <- function(inputFolder = NULL, outputFile = NULL){
 	rychlost = 100 / suppressWarnings(apply(dat[,2:12], 1, FUN = \(x) min(diff(x), na.rm = T)))
 	
 	res = data.frame(id.animal = dat$idAnimal, 
-					 temp = dat$tempAnimal,
+					 temperature = dat$tempAnimal,
 					 speed = rychlost,
 					 day = datum[3],
 					 month = datum[2],
@@ -95,7 +95,7 @@ calculateSpeed <- function(inputFolder = NULL, outputFile = NULL){
 		rychlost = 100 / apply(dat[,2:12], 1, FUN = \(x) min(diff(x), na.rm = T))
 		
 		res2 = data.frame(id.animal = dat$idAnimal, 
-					 temp = dat$tempAnimal,
+					 temperature = dat$tempAnimal,
 					 speed = rychlost,
 					 day = datum[3],
 					 month = datum[2],
