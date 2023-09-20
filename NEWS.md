@@ -2,6 +2,8 @@
 
 * Added NEWS
 * Added option to remove outliers in speedModel
+* Added simpleModel
+* Added timeFromSunrise
 
 
 # BcStats 0.2

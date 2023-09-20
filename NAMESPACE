@@ -2,4 +2,7 @@
 
 export(calculateSpeed)
 export(parasiteModel)
+export(simpleModel)
 export(speedModel)
+export(timeFromSunrise)
+import(suncalc)
