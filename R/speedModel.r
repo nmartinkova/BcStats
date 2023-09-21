@@ -26,6 +26,7 @@
 #'   selected in dialog 1.
 #' @returns Called for side effects. Stores summary of the model fit in a text file and
 #'   plots predicted values in pdf files.
+#' @import nlme utils tcltk vioplot MASS
 #' @export
 #' @examples
 #' \dontrun{
@@ -36,13 +37,6 @@
 
 
 speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE){
-
-for(i in c("utils", "tcltk", "vioplot", "MASS")){
-  if(!require(i, character.only = TRUE)){
-    install.packages(i, dependencies = TRUE)
-    library(i, character.only = TRUE)
-  }
-}
 
 
 paleta = farebna.paleta
@@ -56,7 +50,7 @@ farby = { if(paleta %in% palette.pals())
 
 choose_directory = function(caption = 'Vyber adresar, kde sa budu ukladat vysledky') {
   if (exists('utils::choose.dir')) {
-    choose.dir(caption = caption) 
+    utils::choose.dir(caption = caption) 
   } else {
     tcltk::tk_choose.dir(caption = caption)
   }
@@ -148,7 +142,7 @@ message("Datova sada pre analyzu ma ", nrow(dat2), " riadkov. Pocitam regresny m
 
 
 # model
-fit = lme(as.formula(paste(zavisla, paste(stlpce, collapse = "+"), sep = "~")), 
+fit = nlme::lme(as.formula(paste(zavisla, paste(stlpce, collapse = "+"), sep = "~")), 
   random = ~ 1|id.animal, data = dat2)
 
 
@@ -179,7 +173,7 @@ while(suhlas == "a"){
   if(is.factor(dat2[,stlpce[ktore]])){   
     layout(matrix(c(1,1,2), ncol = 3))
     par(mar = c(4.1,4.1,.5,.5))
-      vioplot(pred ~ dat2[, stlpce[ktore]], col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y)
+      vioplot::vioplot(pred ~ dat2[, stlpce[ktore]], col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y)
       box()
       axis(1, at = 1:nlevels(dat2[, stlpce[ktore]]), labels = levels(dat2[, stlpce[ktore]]))
       axis(2, las = 1)

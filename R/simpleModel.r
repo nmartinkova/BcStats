@@ -24,6 +24,7 @@
 #'   selected in dialog 1.
 #' @returns Called for side effects. Stores summary of the model fit in a text file and
 #'   plots predicted values in pdf files.
+#' @import vioplot utils tcltk
 #' @export
 #' @examples
 #' \dontrun{
@@ -54,7 +55,7 @@ farby = { if(paleta %in% palette.pals())
 
 choose_directory = function(caption = 'Vyber adresar, kde sa budu ukladat vysledky') {
   if (exists('utils::choose.dir')) {
-    choose.dir(caption = caption) 
+    utils::choose.dir(caption = caption) 
   } else {
     tcltk::tk_choose.dir(caption = caption)
   }
@@ -162,7 +163,7 @@ while(suhlas == "a"){
   if(is.factor(dat2[,stlpce[ktore]])){   
     layout(matrix(c(1,1,2), ncol = 3))
     par(mar = c(4.1,4.1,.5,.5))
-      vioplot(pred$fit ~ dat2[, stlpce[ktore]], col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, axes = FALSE)
+      vioplot::vioplot(pred$fit ~ dat2[, stlpce[ktore]], col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, axes = FALSE)
       box()
       axis(1, at = 1:nlevels(dat2[, stlpce[ktore]]), labels = levels(dat2[, stlpce[ktore]]))
       axis(2, las = 1)
