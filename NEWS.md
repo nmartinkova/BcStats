@@ -1,5 +1,7 @@
 # BcStats 0.3.1
 
+* Fixed dependencies
+
 
 # BcStats 0.3
 

@@ -11,6 +11,7 @@
 #' @return Number of hours since sunrise when the animal was captured.
 #' @details At this time, only geographic coordinates on the northern and eastern
 #'   hemispheres are considered.
+#' @import suncalc
 #' @examples
 #'   timeFromSunrise(hour = 10, minute = 30, date = as.Date("2023-05-30"), site = "Hustopece, CZ, 48.93N, 16.72E")
 
