@@ -16,9 +16,9 @@
 #'    working directory.
 #' @note TO DO: incorporate attempt to correct the results, i.e. if speed is negative,
 #'    the animal likely ran twice in one measurement.
-#' @return Invisibly returns data.frame with animal ID, animal temperature during 
+#' @return Invisibly returns data.frame with animal ID, animal animal.temp during 
 #'    measurement, maximum speed between consecutive sensors in meters per second,
-#'    day, month, year of the measurement and the air humidity and temperature of the 
+#'    day, month, year of the measurement and the air humidity and animal.temp of the 
 #'    racetrack. 
 #'
 #'    Recommended way to use the calculated speeds is to read the saved file. Otherwise, 
@@ -33,19 +33,11 @@
 
 
 calculateSpeed <- function(inputFolder = NULL, outputFile = NULL){
-    if(is.null(inputFolder) | is.null(outputFile)){
-      for(i in c("utils", "tcltk", "vioplot", "MASS")){
-        if(!require(i, character.only = TRUE)){
-          install.packages(i, dependencies = TRUE)
-          library(i, character.only = TRUE)
-        }
-      }
-    }
      
     if(is.null(inputFolder)){  
       choose_directory = function(caption = 'Vyber adresar, kde su vsetky opravene log subory z behatka') {
         if (exists('utils::choose.dir')) {
-          choose.dir(caption = caption) 
+          utils::choose.dir(caption = caption) 
         } else {
           tcltk::tk_choose.dir(caption = caption)
         }
@@ -70,7 +62,7 @@ calculateSpeed <- function(inputFolder = NULL, outputFile = NULL){
 	rychlost = 100 / suppressWarnings(apply(dat[,2:12], 1, FUN = \(x) min(diff(x), na.rm = T)))
 	
 	res = data.frame(id.animal = dat$idAnimal, 
-					 temperature = dat$tempAnimal,
+					 animal.temp = dat$tempAnimal,
 					 speed = rychlost,
 					 day = datum[3],
 					 month = datum[2],
@@ -95,7 +87,7 @@ calculateSpeed <- function(inputFolder = NULL, outputFile = NULL){
 		rychlost = 100 / apply(dat[,2:12], 1, FUN = \(x) min(diff(x), na.rm = T))
 		
 		res2 = data.frame(id.animal = dat$idAnimal, 
-					 temperature = dat$tempAnimal,
+					 animal.temp = dat$tempAnimal,
 					 speed = rychlost,
 					 day = datum[3],
 					 month = datum[2],

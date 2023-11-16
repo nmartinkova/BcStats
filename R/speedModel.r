@@ -60,7 +60,7 @@ choose_directory = function(caption = 'Vyber adresar, kde sa budu ukladat vysled
 # nakreslit LMM model
 
 nakresli_lmm = function(model, dat, nezavisla, zavisla, ...){
-	plot(dat[,nezavisla], dat[,zavisla], type = "n", las=1, ...)
+	plot(dat[,nezavisla], pred, pch = 1, col = farby[1], las=1, ...)
 	# https://cosanlab.com/static/papers/AdvPlot_HO.pdf
 	fixed.p = fixef(model)
 	random.p = ranef(model)
@@ -98,6 +98,9 @@ dat$age = sub("egg", NA, dat$age)
 dat$age[grepl("juv|sub", dat$age)] = "young"
 dat$age[grepl("adult", dat$age)] = "adult"
 
+dat$sex = sub("maleV", "male", dat$sex)
+
+
 dat[] = lapply(dat, FUN = function(x) if(is.character(x)) as.factor(x) else {x})
 
 dat$season = as.numeric(format(as.Date(paste(dat$year, dat$month, dat$day, sep="-")), "%j")) 
@@ -107,7 +110,7 @@ dat$season = as.numeric(format(as.Date(paste(dat$year, dat$month, dat$day, sep="
 dat = merge(beh, dat, by.y = c("toe.clip.tatoo", "date"), by.x = c("id.animal", "date"), all = TRUE)
 
 zavisla = "speed"
-stlpce = c("temperature", "humidity", "air.temp")
+stlpce = c("animal.temp", "humidity", "air.temp")
 
 ### kontrola stlpcov pre analyzu
 
@@ -160,15 +163,20 @@ while(suhlas == "a"){
   
   pred = predict(fit, type = "response", se.fit = TRUE)
 
-  pdf(paste0("Vysledky/", stlpce[ktore], ".pdf"), width = ifelse(is.factor(dat2[,stlpce[ktore]]), 8, 5.5), height = 4.5)
+  pdf(paste0("Vysledky/", stlpce[ktore], k, ".pdf"), width = ifelse(is.factor(dat2[,stlpce[ktore]]) | length(stlpce) > 1, 8, 5.5), height = 4.5)
   par(mar = c(4.1, 4.1, .5, .5))
-  popisok = switch(stlpce[ktore], temperature = expression("Temperature ("^"o" * "C)"),
+  popisok = switch(stlpce[ktore], 
+  	   temperature = expression("Temperature ("^"o" * "C)"),
   	   temp = expression("Temperature ("^"o" * "C)"),
+  	   animal.temp = expression("Temperature ("^"o" * "C)"),
        sex = "Sex",
        humidity = "Humidity (%)",
        air.temp = expression("Air temperature ("^"o" * "C)"),
        season = "Calendar date",
-       weight = "Weight (g)")
+       weight = "Weight (g)",
+       site = "Site",
+       age = "Age",
+       timeFromSunrise = "Time from sunrise (h)")
   popisok.y = switch(zavisla, speed = "Predicted running speed (m/s)")
   if(is.factor(dat2[,stlpce[ktore]])){   
     layout(matrix(c(1,1,2), ncol = 3))
@@ -180,8 +188,26 @@ while(suhlas == "a"){
     plot.new()
     legend("topleft", legend = levels(as.factor(dat2[, stlpce[ktore]])), fill = farby[1:nlevels(as.factor(dat2[, stlpce[ktore]]))])
   } else {
+  	if(length(stlpce) > 1){ layout(matrix(c(1,1,2), ncol = 3)) }
 	nakresli_lmm(model = fit, dat = dat2, zavisla = zavisla, nezavisla = stlpce[ktore],
-		xlab = popisok, ylab = popisok.y)	
+		xlab = popisok, ylab = popisok.y)
+		if(length(stlpce) > 1){
+		plot.new()
+		legend("topleft", title = "Covariates:", 
+		  legend = sapply(seq_along(stlpce)[-ktore], \(x) switch(stlpce[x], temperature = expression("Temperature ("^"o" * "C)"),
+  	   temp = expression("Temperature ("^"o" * "C)"),
+  	   animal.temp = expression("Temperature ("^"o" * "C)"),
+       sex = "Sex",
+       humidity = "Humidity (%)",
+       air.temp = expression("Air temperature ("^"o" * "C)"),
+       season = "Calendar date",
+       weight = "Weight (g)",
+       site = "Site",
+       timeFromSunrise = "Time from sunrise (h)",
+       age = "Age")),
+       bty = "n")
+	}
+	
   }
   dev.off()
   suhlas = readline("Chces nakreslit predikovane hodnoty pre dalsiu premennu z tohto modelu? [a/n] ")

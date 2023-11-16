@@ -51,6 +51,13 @@ dat$animal = paste(dat$cohort, dat$toe.clip.tatoo, sep = "-")
 dat$date = as.Date(paste(dat$year, dat$month, dat$day, sep="-"))
 dat$season = as.numeric(format(dat$date, "%j"))   # dni od zaciatku roka
 
+dat$age = sub("egg", NA, dat$age)
+dat$age[grepl("juv|sub", dat$age)] = "young"
+dat$age[grepl("adult", dat$age)] = "adult"
+
+dat$sex = sub("maleV", "male", dat$sex)
+
+
 dat[] = lapply(dat, FUN = function(x) if(is.character(x)) as.factor(x) else {x})
 
 

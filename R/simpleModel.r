@@ -79,7 +79,7 @@ dat$date = as.Date(paste(dat$year, dat$month, dat$day, sep="-"))
 dat$timeFromSunrise = timeFromSunrise(hour = dat$hour, minute = dat$minute, date = dat$date, site = dat$site)
 
 dat$age = sub("egg", NA, dat$age)
-dat$age[grepl("juv", dat$age)] = "young"
+dat$age[grepl("juv|sub", dat$age)] = "young"
 dat$age[grepl("adult", dat$age)] = "adult"
 
 dat$sex = sub("maleV", "male", dat$sex)
@@ -144,22 +144,24 @@ while(suhlas == "a"){
   
   pred = predict(fit, type = "response", se.fit = TRUE)
 
-  pdf(paste0("Vysledky/", stlpce[ktore], ".pdf"), width = ifelse(is.factor(dat2[,stlpce[ktore]]), 8, 5.5), height = 4.5)
+  pdf(paste0("Vysledky/", stlpce[ktore], k, ".pdf"), width = ifelse(is.factor(dat2[,stlpce[ktore]]) | length(stlpce) > 1, 8, 5.5), height = 4.5)
   par(mar = c(4.1, 4.1, .5, .5))
   popisok = switch(stlpce[ktore], temperature = expression("Temperature ("^"o" * "C)"),
   	   temp = expression("Temperature ("^"o" * "C)"),
-  	   Temp = expression("Temperature ("^"o" * "C)"),
+  	   animal.temp = expression("Temperature ("^"o" * "C)"),
        sex = "Sex",
        humidity = "Humidity (%)",
        air.temp = expression("Air temperature ("^"o" * "C)"),
        season = "Calendar date",
        weight = "Weight (g)",
+       site = "Site",
+       age = "Age",
        timeFromSunrise = "Time from sunrise (h)")
   popisok.y = switch(zavisla, speed = "Predicted running speed (m/s)",
-  	weight = "Weight (g)",
-  	temperature = expression("Temperature ("^"o" * "C)"),
-  	temp = expression("Temperature ("^"o" * "C)"),
-  	Temp = expression("Temperature ("^"o" * "C)"),)
+  	weight = "Predicted weight (g)",
+  	temperature = expression("Predicted temperature ("^"o" * "C)"),
+  	temp = expression("Predicted temperature ("^"o" * "C)"),
+  	animal.temp = expression("Predicted temperature ("^"o" * "C)"))
   if(is.factor(dat2[,stlpce[ktore]])){   
     layout(matrix(c(1,1,2), ncol = 3))
     par(mar = c(4.1,4.1,.5,.5))
@@ -173,18 +175,21 @@ while(suhlas == "a"){
 		legend(x = L$rect$left, y = L$rect$top - L$rect$h, title = "Covariates:", 
 		  legend = sapply(seq_along(stlpce)[-ktore], \(x) switch(stlpce[x], temperature = expression("Temperature ("^"o" * "C)"),
   	   temp = expression("Temperature ("^"o" * "C)"),
-  	   Temp = expression("Temperature ("^"o" * "C)"),
+  	   animal.temp = expression("Temperature ("^"o" * "C)"),
        sex = "Sex",
        humidity = "Humidity (%)",
        air.temp = expression("Air temperature ("^"o" * "C)"),
        season = "Calendar date",
        weight = "Weight (g)",
+       site = "Site",
+       age = "Age",
        timeFromSunrise = "Time from sunrise (h)")),
        bty = "n")
 	}
   } else {
 	newdat = data.frame(x1 = seq(min(dat2[, stlpce[ktore]]), max(dat2[, stlpce[ktore]]), length.out = 100))
 	if(length(stlpce) > 1){
+		layout(matrix(c(1,1,2), ncol = 3))
 		for(i in seq_along(stlpce)[-ktore]){
 			newdat[, stlpce[i]] = ifelse(is.factor(dat2[,stlpce[i]]), 
 							names(summary(dat2[,stlpce[i]]))[1], 
@@ -199,6 +204,7 @@ while(suhlas == "a"){
 	lines(newdat[,1], pred[,"lwr"], lty = 2, col = farby[1])
 	lines(newdat[,1], pred[,"upr"], lty = 2, col = farby[1])
 	if(length(stlpce) > 1){
+		plot.new()
 		legend("topleft", title = "Covariates:", 
 		  legend = sapply(seq_along(stlpce)[-ktore], \(x) switch(stlpce[x], temperature = expression("Temperature ("^"o" * "C)"),
   	   temp = expression("Temperature ("^"o" * "C)"),
@@ -208,6 +214,7 @@ while(suhlas == "a"){
        air.temp = expression("Air temperature ("^"o" * "C)"),
        season = "Calendar date",
        weight = "Weight (g)",
+       site = "Site",
        timeFromSunrise = "Time from sunrise (h)",
        age = "Age")),
        bty = "n")
