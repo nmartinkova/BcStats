@@ -12,9 +12,9 @@ calculateSpeed(inputFolder = NULL, outputFile = NULL)
 \item{outputFile}{character specifying filename where to save the results.}
 }
 \value{
-Invisibly returns data.frame with animal ID, animal temperature during
+Invisibly returns data.frame with animal ID, animal animal.temp during
 measurement, maximum speed between consecutive sensors in meters per second,
-day, month, year of the measurement and the air humidity and temperature of the
+day, month, year of the measurement and the air humidity and animal.temp of the
 racetrack.
 
 Recommended way to use the calculated speeds is to read the saved file. Otherwise,

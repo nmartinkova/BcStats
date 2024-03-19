@@ -62,8 +62,8 @@ choose_directory = function(caption = 'Vyber adresar, kde sa budu ukladat vysled
 nakresli_lmm = function(model, dat, nezavisla, zavisla, ...){
 	plot(dat[,nezavisla], pred, pch = 1, col = farby[1], las=1, ...)
 	# https://cosanlab.com/static/papers/AdvPlot_HO.pdf
-	fixed.p = fixef(model)
-	random.p = ranef(model)
+	fixed.p = nlme::fixef(model)
+	random.p = nlme::ranef(model)
 	coefs = switch(ncol(random.p), 
 	               cbind(fixed.p[1] + random.p[,1], fixed.p[nezavisla]), 
 	               cbind(fixed.p[1] + random.p[,1], fixed.p[nezavisla] + random.p[,2]))
