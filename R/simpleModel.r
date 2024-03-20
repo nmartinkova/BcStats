@@ -88,6 +88,19 @@ dat[] = lapply(dat, FUN = function(x) if(is.character(x)) as.factor(x) else {x})
 
 dat$season = as.numeric(format(as.Date(paste(dat$year, dat$month, dat$day, sep="-")), "%j")) 
 
+dat$aged = dat$season + 365 * (dat$year - dat$cohort)
+
+# first juveniles recorded in Hustopece
+mladata = data.frame(prve.mlada = as.numeric(format(as.Date(c("28.7.2018", "14.8.2020", "29.7.2021", "28.7.2022", "18.7.2023"), "%d.%m.%Y"), "%j")), 
+					rok = c(2018, 2020, 2021, 2022, 2023))
+korekcia = rep(round(mean(mladata$prve.mlada), 0), nrow(dat))
+for(i in 1:nrow(mladata)){
+	korekcia[sapply(dat$cohort == mladata$rok[i], isTRUE)] = mladata$prve.mlada[i]
+}
+
+dat$aged = dat$aged - korekcia
+
+dat$aged.month = round(dat$aged / 30.41, 0)
 
 
 zavisla = "temperature"

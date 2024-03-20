@@ -1,3 +1,8 @@
+# BcStats 0.3.4
+
+* Added variable aged to `simpleModel`
+
+
 # BcStats 0.3.3
 
 * Fixed plotting bug in `speedModel`
