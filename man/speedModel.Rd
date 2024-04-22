@@ -4,7 +4,7 @@
 \alias{speedModel}
 \title{Calculates mixed regression model from continuous data}
 \usage{
-speedModel(farebna.paleta = "Accent", vymaz.odlahle = TRUE)
+speedModel(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA = TRUE)
 }
 \arguments{
 \item{farebna.paleta}{character. Color palette in \code{hcl.pals()} or
@@ -12,6 +12,9 @@ speedModel(farebna.paleta = "Accent", vymaz.odlahle = TRUE)
 
 \item{vymaz.odlahle}{logical, indicating whether to remove outliers in the dependent
 variable using Tukey's fences.}
+
+\item{vymaz.NA}{logical, indicating whether to remove rows in data, where information is
+missing.}
 }
 \value{
 Called for side effects. Stores summary of the model fit in a text file and
@@ -42,6 +45,10 @@ Once the data tables are selected, the function asks to select variables that wo
 be used to construct the model. The predicted values from the model can be plotted,
 displaying one partial fit at the time. All results can be found in the folder
 selected in dialog 1.
+
+Argument \code{vymaz.NA} checks for missing data in columns \code{amimal.temp}, \code{air.temp},
+\code{humidity}, \code{site}, \code{L}, \code{Lc.L}, \code{sex}, \code{age}, and \code{weight} and then removes the
+rows is any missing information.
 }
 \examples{
 \dontrun{

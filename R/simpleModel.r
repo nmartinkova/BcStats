@@ -100,7 +100,7 @@ for(i in 1:nrow(mladata)){
 
 dat$aged = dat$aged - korekcia
 
-dat$aged.month = round(dat$aged / 30.41, 0)
+dat$aged = round(dat$aged / 30.41, 0)
 
 
 zavisla = "temperature"

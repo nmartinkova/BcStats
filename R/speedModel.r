@@ -9,6 +9,8 @@
 #'   \code{palette.pals()}.
 #' @param vymaz.odlahle logical, indicating whether to remove outliers in the dependent
 #'   variable using Tukey's fences.
+#' @param vymaz.NA logical, indicating whether to remove rows in data, where information is
+#'   missing.
 #' @details Function communicates with the user in Slovak to distinguish what dialogs
 #'   represent intended functionality. Pay attention to dialog boxes (3) at the beginning 
 #'   and prompts on the R console afterwards. 
@@ -24,6 +26,10 @@
 #'   be used to construct the model. The predicted values from the model can be plotted,
 #'   displaying one partial fit at the time. All results can be found in the folder 
 #'   selected in dialog 1.
+#'   
+#'   Argument `vymaz.NA` checks for missing data in columns `amimal.temp`, `air.temp`,
+#'   `humidity`, `site`, `L`, `Lc.L`, `sex`, `age`, and `weight` and then removes the
+#'   rows is any missing information.
 #' @returns Called for side effects. Stores summary of the model fit in a text file and
 #'   plots predicted values in pdf files.
 #' @import nlme utils tcltk vioplot MASS
@@ -36,7 +42,7 @@
 #' }
 
 
-speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE){
+speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA = TRUE){
 
 
 paleta = farebna.paleta
@@ -105,12 +111,20 @@ dat[] = lapply(dat, FUN = function(x) if(is.character(x)) as.factor(x) else {x})
 
 dat$season = as.numeric(format(as.Date(paste(dat$year, dat$month, dat$day, sep="-")), "%j")) 
 
+if(!any("Lc.L" %in% colnames(dat))){
+	dat$Lc.L = round(dat$Lc / dat$L, 3)
+}
 
 
 dat = merge(beh, dat, by.y = c("toe.clip.tatoo", "date"), by.x = c("id.animal", "date"), all = TRUE)
 
 zavisla = "speed"
-stlpce = c("animal.temp", "humidity", "air.temp")
+stlpce = c("animal.temp", "humidity", "air.temp", "site", "L", "Lc.L", "sex", "age",  "weight")
+
+if(vymaz.NA){
+	dat <- dat[complete.cases(dat[, stlpce]), ] 
+}
+
 
 ### kontrola stlpcov pre analyzu
 
@@ -176,7 +190,9 @@ while(suhlas == "a"){
        weight = "Weight (g)",
        site = "Site",
        age = "Age",
-       timeFromSunrise = "Time from sunrise (h)")
+       timeFromSunrise = "Time from sunrise (h)",
+       Lc.L = "Tail length relative to body length (mm/mm)",
+       L = "Body length (mm)")
   popisok.y = switch(zavisla, speed = "Predicted running speed (m/s)")
   if(is.factor(dat2[,stlpce[ktore]])){   
     layout(matrix(c(1,1,2), ncol = 3))
@@ -204,7 +220,9 @@ while(suhlas == "a"){
        weight = "Weight (g)",
        site = "Site",
        timeFromSunrise = "Time from sunrise (h)",
-       age = "Age")),
+       age = "Age",
+       Lc.L = "Tail length relative to body length (mm/mm)",
+       L = "Body length (mm)")),
        bty = "n")
 	}
 	

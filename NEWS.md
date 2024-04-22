@@ -1,3 +1,8 @@
+# BcStats 0.3.5
+
+* Added optional global removal of rows with missing data for a fixed set of columns in `speedModel`
+* Updated `simpleModel` to show values in aged in months
+
 # BcStats 0.3.4
 
 * Added variable aged to `simpleModel`
