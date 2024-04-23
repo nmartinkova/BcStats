@@ -1,3 +1,7 @@
+# BcStats 0.3.6
+
+* Bug fix
+
 # BcStats 0.3.5
 
 * Added optional global removal of rows with missing data for a fixed set of columns in `speedModel`

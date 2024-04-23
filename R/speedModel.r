@@ -111,15 +111,15 @@ dat[] = lapply(dat, FUN = function(x) if(is.character(x)) as.factor(x) else {x})
 
 dat$season = as.numeric(format(as.Date(paste(dat$year, dat$month, dat$day, sep="-")), "%j")) 
 
-if(!any("Lc.L" %in% colnames(dat))){
-	dat$Lc.L = round(dat$Lc / dat$L, 3)
+if(!any("Lcd.L" %in% colnames(dat))){
+	dat$Lcd.L = round(dat$Lcd / dat$L, 3)
 }
 
 
 dat = merge(beh, dat, by.y = c("toe.clip.tatoo", "date"), by.x = c("id.animal", "date"), all = TRUE)
 
 zavisla = "speed"
-stlpce = c("animal.temp", "humidity", "air.temp", "site", "L", "Lc.L", "sex", "age",  "weight")
+stlpce = c("animal.temp", "humidity", "air.temp", "site", "L", "Lcd.L", "sex", "age",  "weight")
 
 if(vymaz.NA){
 	dat <- dat[complete.cases(dat[, stlpce]), ] 
