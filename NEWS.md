@@ -1,3 +1,7 @@
+# BcStats 0.3.7
+
+* Added argument to `speedModel` that enables to plot measurement or predictions
+
 # BcStats 0.3.6
 
 * Bug fix

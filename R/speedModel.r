@@ -11,6 +11,8 @@
 #'   variable using Tukey's fences.
 #' @param vymaz.NA logical, indicating whether to remove rows in data, where information is
 #'   missing.
+#' @param nakresli.predikovane logical, indicating whether to plot predicted values (\code{TRUE})
+#'   or measured values (\code{FALSE}).
 #' @details Function communicates with the user in Slovak to distinguish what dialogs
 #'   represent intended functionality. Pay attention to dialog boxes (3) at the beginning 
 #'   and prompts on the R console afterwards. 
@@ -42,7 +44,7 @@
 #' }
 
 
-speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA = TRUE){
+speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA = TRUE, nakresli.predikovane = TRUE){
 
 
 paleta = farebna.paleta
@@ -66,7 +68,11 @@ choose_directory = function(caption = 'Vyber adresar, kde sa budu ukladat vysled
 # nakreslit LMM model
 
 nakresli_lmm = function(model, dat, nezavisla, zavisla, ...){
+  if(nakresli.predikovane){
 	plot(dat[,nezavisla], pred, pch = 1, col = farby[1], las=1, ...)
+  } else {
+    plot(dat[,nezavisla], dat[,zavisla], pch = 1, col = farby[1], las=1, ...)
+  }
 	# https://cosanlab.com/static/papers/AdvPlot_HO.pdf
 	fixed.p = nlme::fixef(model)
 	random.p = nlme::ranef(model)
