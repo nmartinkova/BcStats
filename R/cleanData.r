@@ -4,6 +4,8 @@
 #' and calculates additional fields such as animal identifier, date, time from sunrise, 
 #' Julian day, age, and corrects age based on the first recorded juvenile data from a specific location.
 #'
+#'
+#' @param filename A character vector with path to a file.
 #' @return A data frame with cleaned and processed animal data, including calculated fields.
 #' 
 #' @details 
@@ -24,9 +26,13 @@
 #'   cleanData()
 #' }
 
-cleanData <- function(){
+cleanData <- function(filename = NULL){
 
-dat = read.table(file.choose(), header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+if(is.null(filename)){
+  filename = file.choose()
+}
+
+dat = read.table(filename, header = TRUE, sep = "\t", stringsAsFactors = FALSE)
 dat$animal = paste(dat$cohort, dat$toe.clip.tatoo, sep = "-")
 dat$date = as.Date(paste(dat$year, dat$month, dat$day, sep="-"))
 

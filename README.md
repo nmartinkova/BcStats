@@ -12,6 +12,7 @@ To start using _BcStats_, install it from GitHub from within `R`.
 # Check whether required package devtools exists, if not install it
 if(!require("devtools", character.only = TRUE)){
     install.packages("devtools", dependencies = TRUE)
+    library(devtools)
 }
 
 # Install BcStats from GitHub using devtools. Internet access is necessary
