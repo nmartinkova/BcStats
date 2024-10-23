@@ -1,3 +1,8 @@
+# BcStats 0.3.8
+
+* Added function `cleanData` to prepare the animal capture data provided by the user
+
+
 # BcStats 0.3.7
 
 * Added argument to `speedModel` that enables to plot measurement or predictions

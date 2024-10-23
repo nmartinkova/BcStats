@@ -91,8 +91,8 @@ dat$season = as.numeric(format(as.Date(paste(dat$year, dat$month, dat$day, sep="
 dat$aged = dat$season + 365 * (dat$year - dat$cohort)
 
 # first juveniles recorded in Hustopece
-mladata = data.frame(prve.mlada = as.numeric(format(as.Date(c("28.7.2018", "14.8.2020", "29.7.2021", "28.7.2022", "18.7.2023"), "%d.%m.%Y"), "%j")), 
-					rok = c(2018, 2020, 2021, 2022, 2023))
+mladata = data.frame(prve.mlada = as.numeric(format(as.Date(c("28.7.2018", "14.8.2020", "29.7.2021", "28.7.2022", "18.7.2023", "23.7.2024"), "%d.%m.%Y"), "%j")), 
+					rok = c(2018, 2020, 2021, 2022, 2023, 2024))
 korekcia = rep(round(mean(mladata$prve.mlada), 0), nrow(dat))
 for(i in 1:nrow(mladata)){
 	korekcia[sapply(dat$cohort == mladata$rok[i], isTRUE)] = mladata$prve.mlada[i]
