@@ -19,6 +19,7 @@
 #' - The age of the animals is calculated, adjusted based on the first juvenile records from specific years, and converted into months.
 #'
 #' @importFrom utils read.table
+#' @export
 #' 
 #' @examples 
 #' \dontrun{
