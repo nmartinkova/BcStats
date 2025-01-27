@@ -1,3 +1,8 @@
+# BcStats 0.3.9
+
+* Updated plotting labels in `speedModel`
+
+
 # BcStats 0.3.8
 
 * Added function `cleanData` to prepare the animal capture data provided by the user

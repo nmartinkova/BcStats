@@ -198,7 +198,10 @@ while(suhlas == "a"){
        age = "Age",
        timeFromSunrise = "Time from sunrise (h)",
        Lc.L = "Tail length relative to body length (mm/mm)",
-       L = "Body length (mm)")
+       L = "Body length (mm)",
+       Lcd = "Tail length (mm)",
+       Lreg = "Tail regenerate length (mm)"
+    )
   popisok.y = switch(zavisla, speed = "Predicted running speed (m/s)")
   if(is.factor(dat2[,stlpce[ktore]])){   
     layout(matrix(c(1,1,2), ncol = 3))
@@ -228,7 +231,10 @@ while(suhlas == "a"){
        timeFromSunrise = "Time from sunrise (h)",
        age = "Age",
        Lc.L = "Tail length relative to body length (mm/mm)",
-       L = "Body length (mm)")),
+       L = "Body length (mm)"),
+       Lcd = "Tail length (mm)",
+       Lreg = "Tail regenerate length (mm)"
+),
        bty = "n")
 	}
 	

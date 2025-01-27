@@ -4,7 +4,12 @@
 \alias{speedModel}
 \title{Calculates mixed regression model from continuous data}
 \usage{
-speedModel(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA = TRUE)
+speedModel(
+  farebna.paleta = "Accent",
+  vymaz.odlahle = TRUE,
+  vymaz.NA = TRUE,
+  nakresli.predikovane = TRUE
+)
 }
 \arguments{
 \item{farebna.paleta}{character. Color palette in \code{hcl.pals()} or
@@ -15,6 +20,9 @@ variable using Tukey's fences.}
 
 \item{vymaz.NA}{logical, indicating whether to remove rows in data, where information is
 missing.}
+
+\item{nakresli.predikovane}{logical, indicating whether to plot predicted values (\code{TRUE})
+or measured values (\code{FALSE}).}
 }
 \value{
 Called for side effects. Stores summary of the model fit in a text file and
