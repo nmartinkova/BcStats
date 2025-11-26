@@ -1,3 +1,7 @@
+# BcStats 0.3.10
+
+* Changed `calculateSpeed` default output file behavior to a text file in the working directory, and added stop message if reading a running log file fails or the speed calculation fails.
+
 # BcStats 0.3.9
 
 * Updated plotting labels in `speedModel`

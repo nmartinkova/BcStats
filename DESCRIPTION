@@ -1,6 +1,6 @@
 Package: BcStats
 Title: Statistics for Bachelors in Martinkova-Smolinsky lab
-Version: 0.3.9
+Version: 0.3.10
 Authors@R: 
     person("Natalia", "Martinkova", , "martinkova@ivb.cz", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-4556-4363"))
@@ -9,7 +9,7 @@ Description: Statistical data analyses for students working on their Bachelor's 
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports: 
     MASS,
     nlme,
