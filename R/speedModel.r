@@ -221,7 +221,7 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
       layout(matrix(c(1, 1, 2), ncol = 3))
       par(mar = c(4.1, 4.1, .5, .5))
       vioplot::vioplot(pred ~ dat2[, stlpce[ktore]],
-        col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, axes = FALSE
+        col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, cex.axis = 1
       )
 
       points(
