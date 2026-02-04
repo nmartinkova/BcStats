@@ -94,11 +94,13 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
 
   beh <- read.table(behFile <- file.choose(), header = TRUE, sep = "\t", stringsAsFactors = TRUE)
   beh$date <- as.Date(paste(beh$year, beh$month, beh$day, sep = "-"))
+  beh$id.animal = toupper(beh$id.animal)
 
 
   message("Vyber tabulku s udajmi Lagilis - musi byt tab-delimited format")
 
   dat <- read.table(datFile <- file.choose(), header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+  dat$toe.clip.tatoo = toupper(dat$toe.clip.tatoo)
   dat$animal <- paste(dat$cohort, dat$toe.clip.tatoo, sep = "-")
   dat$date <- as.Date(paste(dat$year, dat$month, dat$day, sep = "-"))
   dat$season <- as.numeric(format(dat$date, "%j")) # dni od zaciatku roka
