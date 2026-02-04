@@ -68,9 +68,9 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
 
   nakresli_lmm <- function(model, dat, nezavisla, zavisla, ...) {
     if (nakresli.predikovane) {
-      plot(dat[, nezavisla], pred, pch = 1, col = farby[1], las = 1, ...)
+      plot(dat[, nezavisla], pred, pch = 1, col = farby[1], las = 1, ylim = range(dat2[,zavisla], pred), ...)
     } else {
-      plot(dat[, nezavisla], dat[, zavisla], pch = 1, col = farby[1], las = 1, ...)
+      plot(dat[, nezavisla], dat[, zavisla], pch = 1, col = farby[1], ylim = range(dat2[,zavisla], pred), las = 1, ...)
     }
     # https://cosanlab.com/static/papers/AdvPlot_HO.pdf
     fixed.p <- nlme::fixef(model)
@@ -220,10 +220,11 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
     if (is.factor(dat2[, stlpce[ktore]])) {
       layout(matrix(c(1, 1, 2), ncol = 3))
       par(mar = c(4.1, 4.1, .5, .5))
-#      vioplot::vioplot(pred ~ dat2[, stlpce[ktore]],
-#        col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, cex.axis = 1
-#      )
-boxplot(pred ~ dat2[, stlpce[ktore]], col = farby, xlab = popisok, ylab = popisok.y, axes = F)
+      vioplot::vioplot(pred ~ dat2[, stlpce[ktore]],
+        col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, cex.axis = 1,
+        ylim = range(dat2[,zavisla], pred)
+      )
+# boxplot(pred ~ dat2[, stlpce[ktore]], col = farby, xlab = popisok, ylab = popisok.y, axes = F)
       points(
         x = jitter(x = as.numeric(dat2[, stlpce[ktore]]), amount = .2),
         y = {
