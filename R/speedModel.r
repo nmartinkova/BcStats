@@ -42,7 +42,7 @@
 #' speedModel()
 #' # Hit Enter and follow instructions in dialogs and on the console
 #' }
-speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA = TRUE, nakresli.predikovane = FALSE) {
+speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA = TRUE, nakresli.predikovane = TRUE) {
   paleta <- farebna.paleta
   farby <- {
     if (paleta %in% palette.pals()) {
@@ -220,11 +220,11 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
     if (is.factor(dat2[, stlpce[ktore]])) {
       layout(matrix(c(1, 1, 2), ncol = 3))
       par(mar = c(4.1, 4.1, .5, .5))
-      vioplot::vioplot(pred ~ dat2[, stlpce[ktore]],
-        col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, cex.axis = 1,
-        ylim = range(dat2[,zavisla], pred)
-      )
-# boxplot(pred ~ dat2[, stlpce[ktore]], col = farby, xlab = popisok, ylab = popisok.y, axes = F)
+   #   vioplot::vioplot(pred ~ dat2[, stlpce[ktore]],
+  #      col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, cex.axis = 1,
+ #       ylim = range(dat2[,zavisla], pred)
+#      )
+ boxplot(pred ~ dat2[, stlpce[ktore]], col = farby, xlab = popisok, ylab = popisok.y, axes = F)
       points(
         x = jitter(x = as.numeric(dat2[, stlpce[ktore]]), amount = .2),
         y = {
