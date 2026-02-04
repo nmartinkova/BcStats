@@ -129,7 +129,7 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
   dat <- merge(beh, dat, by.y = c("toe.clip.tatoo", "date"), by.x = c("id.animal", "date"), all = TRUE)
 
   zavisla <- "speed"
-  stlpce <- c("animal.temp", "gravidna", "weight", "site", "Lcd", "sex", "age", "season")
+  stlpce <- c("animal.temp", "gravidna", "weight", "site", "Lcd", "season")
 
   if (vymaz.NA) {
     dat <- dat[complete.cases(dat[, stlpce]), ]
@@ -220,10 +220,24 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
     if (is.factor(dat2[, stlpce[ktore]])) {
       layout(matrix(c(1, 1, 2), ncol = 3))
       par(mar = c(4.1, 4.1, .5, .5))
-      vioplot::vioplot(pred ~ dat2[, stlpce[ktore]], col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, axes = FALSE)
+      vioplot::vioplot(pred ~ dat2[, stlpce[ktore]],
+        col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, axes = FALSE
+      )
+
+      points(
+        x = jitter(x = as.numeric(dat2[, stlpce[ktore]]), amount = .2),
+        y = {
+          if (nakresli.predikovane) {
+            pred
+          } else {
+            dat2[, zavisla]
+          }
+        },
+        pch = 19, col = adjustcolor("black", alpha = .5), lwd = 0, cex = .6
+      )
       box()
-      axis(1, at = 1:nlevels(dat2[, stlpce[ktore]]), labels = levels(dat2[, stlpce[ktore]]))
-      axis(2, las = 1)
+      #      axis(1, at = 1:nlevels(dat2[, stlpce[ktore]]), labels = levels(dat2[, stlpce[ktore]]))
+      #      axis(2, las = 1)
       plot.new()
       l <- legend("topleft",
         legend = levels(as.factor(dat2[, stlpce[ktore]])),

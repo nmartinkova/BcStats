@@ -1,3 +1,9 @@
+# BcStats 0.3.11
+
+* Updated covariates and axis labels in `speedModel`.
+* Added datapoints jitters for violin plots in `speedModel`.
+
+
 # BcStats 0.3.10
 
 * Changed `calculateSpeed` default output file behavior to a text file in the working directory, and added stop message if reading a running log file fails or the speed calculation fails.
