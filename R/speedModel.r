@@ -42,7 +42,7 @@
 #' speedModel()
 #' # Hit Enter and follow instructions in dialogs and on the console
 #' }
-speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA = TRUE, nakresli.predikovane = TRUE) {
+speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA = TRUE, nakresli.predikovane = FALSE) {
   paleta <- farebna.paleta
   farby <- {
     if (paleta %in% palette.pals()) {
@@ -233,7 +233,7 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
             dat2[, zavisla]
           }
         },
-        pch = 19, col = adjustcolor("black", alpha = .5), lwd = 0, cex = .6
+        pch = 19, col = adjustcolor("black", alpha = .5), lwd = 0, cex = .7
       )
       box()
       #      axis(1, at = 1:nlevels(dat2[, stlpce[ktore]]), labels = levels(dat2[, stlpce[ktore]]))
@@ -303,5 +303,5 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
     dev.off()
     suhlas <- readline("Chces nakreslit predikovane hodnoty pre dalsiu premennu z tohto modelu? [a/n] ")
   }
-  write.table(cbind(dat2, pred), paste0("Vysledky/Lagilis", k, "txt"), sep = "\t", quote = F, row.names = F)
+  write.table(cbind(dat2, pred), paste0("Vysledky/Lagilis", k, ".txt"), sep = "\t", quote = F, row.names = F)
 }

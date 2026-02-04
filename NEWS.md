@@ -1,7 +1,7 @@
 # BcStats 0.3.11
 
 * Updated covariates and axis labels in `speedModel`.
-* Added datapoints jitters for violin plots in `speedModel`.
+* Added datapoints jitters for violin plots and saving of data used for model fitting in `speedModel`.
 
 
 # BcStats 0.3.10
