@@ -220,10 +220,10 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
     if (is.factor(dat2[, stlpce[ktore]])) {
       layout(matrix(c(1, 1, 2), ncol = 3))
       par(mar = c(4.1, 4.1, .5, .5))
-      vioplot::vioplot(pred ~ dat2[, stlpce[ktore]],
-        col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, cex.axis = 1
-      )
-
+#      vioplot::vioplot(pred ~ dat2[, stlpce[ktore]],
+#        col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, cex.axis = 1
+#      )
+boxplot(pred ~ dat2[, stlpce[ktore]], col = farby, xlab = popisok, ylab = popisok.y, axes = F)
       points(
         x = jitter(x = as.numeric(dat2[, stlpce[ktore]]), amount = .2),
         y = {
@@ -236,8 +236,8 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
         pch = 19, col = adjustcolor("black", alpha = .5), lwd = 0, cex = .7
       )
       box()
-      #      axis(1, at = 1:nlevels(dat2[, stlpce[ktore]]), labels = levels(dat2[, stlpce[ktore]]))
-      #      axis(2, las = 1)
+           axis(1, at = 1:nlevels(dat2[, stlpce[ktore]]), labels = levels(dat2[, stlpce[ktore]]))
+            axis(2, las = 1)
       plot.new()
       l <- legend("topleft",
         legend = levels(as.factor(dat2[, stlpce[ktore]])),
