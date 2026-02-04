@@ -92,15 +92,13 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
 
   message("Vyber tabulku s rychlostou behu - idealne vysledok z funkcie calculateSpeed()")
 
-  beh <- read.table(file.choose(), header = TRUE, sep = "\t", stringsAsFactors = TRUE)
+  beh <- read.table(behFile <- file.choose(), header = TRUE, sep = "\t", stringsAsFactors = TRUE)
   beh$date <- as.Date(paste(beh$year, beh$month, beh$day, sep = "-"))
-
-
 
 
   message("Vyber tabulku s udajmi Lagilis - musi byt tab-delimited format")
 
-  dat <- read.table(file.choose(), header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+  dat <- read.table(datFile <- file.choose(), header = TRUE, sep = "\t", stringsAsFactors = FALSE)
   dat$animal <- paste(dat$cohort, dat$toe.clip.tatoo, sep = "-")
   dat$date <- as.Date(paste(dat$year, dat$month, dat$day, sep = "-"))
   dat$season <- as.numeric(format(dat$date, "%j")) # dni od zaciatku roka
@@ -131,7 +129,7 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
   dat <- merge(beh, dat, by.y = c("toe.clip.tatoo", "date"), by.x = c("id.animal", "date"), all = TRUE)
 
   zavisla <- "speed"
-  stlpce <- c("animal.temp", "humidity", "air.temp", "site", "L", "Lcd.L", "sex", "age", "weight")
+  stlpce <- c("animal.temp", "gravidna", "weight", "site", "Lcd", "sex", "age", "season")
 
   if (vymaz.NA) {
     dat <- dat[complete.cases(dat[, stlpce]), ]
@@ -180,7 +178,10 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
 
 
   k <- sum(grepl("LMM", dir(doma, recursive = TRUE))) + 1
-  cat(paste(zavisla, paste(stlpce, collapse = " + "), sep = " ~ "), "\n\n", file = paste0("Vysledky/LMM", k, ".txt"), append = FALSE)
+  cat("Vstupny subor pre rychlost:", behFile, "\nVstupny subor pre jasterice:", datFile, "\n\n",
+    file = paste0("Vysledky/LMM", k, ".txt"), append = FALSE
+  )
+  cat(paste(zavisla, paste(stlpce, collapse = " + "), sep = " ~ "), "\n\n", file = paste0("Vysledky/LMM", k, ".txt"), append = TRUE)
   capture.output(summary(fit), file = paste0("Vysledky/LMM", k, ".txt"), append = TRUE)
 
   print(summary(fit))
@@ -210,7 +211,8 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
       Lc.L = "Tail length relative to body length (mm/mm)",
       L = "Body length (mm)",
       Lcd = "Tail length (mm)",
-      Lreg = "Tail regenerate length (mm)"
+      Lreg = "Tail regenerate length (mm)",
+      gravidna = "Gravid"
     )
     popisok.y <- switch(zavisla,
       speed = "Predicted running speed (m/s)"
@@ -218,12 +220,38 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
     if (is.factor(dat2[, stlpce[ktore]])) {
       layout(matrix(c(1, 1, 2), ncol = 3))
       par(mar = c(4.1, 4.1, .5, .5))
-      vioplot::vioplot(pred ~ dat2[, stlpce[ktore]], col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y)
+      vioplot::vioplot(pred ~ dat2[, stlpce[ktore]], col = farby, wex = .6, las = 1, xlab = popisok, ylab = popisok.y, axes = FALSE)
       box()
       axis(1, at = 1:nlevels(dat2[, stlpce[ktore]]), labels = levels(dat2[, stlpce[ktore]]))
       axis(2, las = 1)
       plot.new()
-      legend("topleft", legend = levels(as.factor(dat2[, stlpce[ktore]])), fill = farby[1:nlevels(as.factor(dat2[, stlpce[ktore]]))])
+      l <- legend("topleft",
+        legend = levels(as.factor(dat2[, stlpce[ktore]])),
+        fill = farby[1:nlevels(as.factor(dat2[, stlpce[ktore]]))], border = NA
+      )
+      legend(
+        x = l$rect$left, y = l$rect$top - l$rect$h,
+        title = "Covariates:",
+        legend = sapply(seq_along(stlpce)[-ktore], \(x) switch(stlpce[x],
+          temperature = expression("Temperature ("^"o" * "C)"),
+          temp = expression("Temperature ("^"o" * "C)"),
+          animal.temp = expression("Temperature ("^"o" * "C)"),
+          sex = "Sex",
+          humidity = "Humidity (%)",
+          air.temp = expression("Air temperature ("^"o" * "C)"),
+          season = "Calendar date",
+          weight = "Weight (g)",
+          site = "Site",
+          timeFromSunrise = "Time from sunrise (h)",
+          age = "Age",
+          Lc.L = "Tail length relative to body length (mm/mm)",
+          L = "Body length (mm)",
+          Lcd = "Tail length (mm)",
+          Lreg = "Tail regenerate length (mm)",
+          gravidna = "Gravid"
+        )),
+        bty = "n"
+      )
     } else {
       if (length(stlpce) > 1) {
         layout(matrix(c(1, 1, 2), ncol = 3))
@@ -251,7 +279,8 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
             Lc.L = "Tail length relative to body length (mm/mm)",
             L = "Body length (mm)",
             Lcd = "Tail length (mm)",
-            Lreg = "Tail regenerate length (mm)"
+            Lreg = "Tail regenerate length (mm)",
+            gravidna = "Gravid"
           )),
           bty = "n"
         )
@@ -260,4 +289,5 @@ speedModel <- function(farebna.paleta = "Accent", vymaz.odlahle = TRUE, vymaz.NA
     dev.off()
     suhlas <- readline("Chces nakreslit predikovane hodnoty pre dalsiu premennu z tohto modelu? [a/n] ")
   }
+  write.table(cbind(dat2, pred), paste0("Vysledky/Lagilis", k, "txt"), sep = "\t", quote = F, row.names = F)
 }
